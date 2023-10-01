@@ -2,6 +2,7 @@ import { Routes, Route } from 'react-router-dom'
 import Navbar from './components/common/Navbar'
 import UserList from './components/users/usersLists/UserList'
 import UserDetails from './components/users/userDetails/UserDetails'
+import NotFound from './components/common/NotFound'
 
 export default function App() {
   return (
@@ -11,6 +12,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<UserList />} />
           <Route path="/user/:id" element={<UserDetails />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
     </div>
