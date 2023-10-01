@@ -36,7 +36,7 @@ describe('UserList', () => {
     const { user } = renderApp('/')
     await screen.findByText('Showing 1–12 of 30 people')
 
-    await user.type(screen.getByRole('searchbox', { name: 'Search by name or email' }), 'nadia')
+    await user.type(screen.getByRole('searchbox', { name: 'Search people' }), 'nadia')
 
     expect(await screen.findByText('Showing 1–1 of 1 person matching “nadia”')).toBeInTheDocument()
     expect(terms).toEqual(['nadia'])
@@ -55,7 +55,7 @@ describe('UserList', () => {
     )
     const terms = searchRequests()
     const { user } = renderApp('/')
-    const input = screen.getByRole('searchbox', { name: 'Search by name or email' })
+    const input = screen.getByRole('searchbox', { name: 'Search people' })
 
     await user.type(input, 'ro')
     await waitFor(() => expect(terms).toEqual(['ro']))
@@ -70,7 +70,7 @@ describe('UserList', () => {
     renderApp('/?q=example.com&page=2')
 
     expect(await screen.findByText('Showing 13–24 of 30 people matching “example.com”')).toBeInTheDocument()
-    expect(screen.getByRole('searchbox', { name: 'Search by name or email' })).toHaveValue('example.com')
+    expect(screen.getByRole('searchbox', { name: 'Search people' })).toHaveValue('example.com')
   })
 
   it('pages forward and back with links and moves focus to the results heading', async () => {
@@ -95,7 +95,7 @@ describe('UserList', () => {
     const { user } = renderApp('/?page=2')
     await screen.findByText('Showing 13–24 of 30 people')
 
-    await user.type(screen.getByRole('searchbox', { name: 'Search by name or email' }), 'zoe{Enter}')
+    await user.type(screen.getByRole('searchbox', { name: 'Search people' }), 'zoe{Enter}')
 
     expect(await screen.findByText('Showing 1–1 of 1 person matching “zoe”')).toBeInTheDocument()
     expect(currentUrl()).toBe('/?q=zoe')
@@ -116,7 +116,7 @@ describe('UserList', () => {
     await user.click(screen.getByRole('button', { name: 'Clear search' }))
 
     expect(await screen.findByText('Showing 1–12 of 30 people')).toBeInTheDocument()
-    expect(screen.getByRole('searchbox', { name: 'Search by name or email' })).toHaveValue('')
+    expect(screen.getByRole('searchbox', { name: 'Search people' })).toHaveValue('')
     expect(currentUrl()).toBe('/')
   })
 
@@ -124,7 +124,7 @@ describe('UserList', () => {
     const { user } = renderApp('/?q=rosa')
     await screen.findByText('Showing 1–1 of 1 person matching “rosa”')
 
-    await user.click(screen.getByRole('searchbox', { name: 'Search by name or email' }))
+    await user.click(screen.getByRole('searchbox', { name: 'Search people' }))
     await user.keyboard('{Escape}')
 
     expect(await screen.findByText('Showing 1–12 of 30 people')).toBeInTheDocument()

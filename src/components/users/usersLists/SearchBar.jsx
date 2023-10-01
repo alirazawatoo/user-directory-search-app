@@ -32,7 +32,7 @@ export default function SearchBar() {
       }}
     >
       <label htmlFor="directory-search" className="text-sm font-bold uppercase tracking-[0.14em] text-forest-deep">
-        Search by name or email
+        Search people
       </label>
       <input
         id="directory-search"

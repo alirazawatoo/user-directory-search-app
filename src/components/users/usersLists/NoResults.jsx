@@ -10,7 +10,7 @@ export default function NoResults({ query }) {
   return (
     <div className="rounded-lg border border-dashed border-rule p-10 text-center">
       <p className="font-display text-2xl font-bold">No one matches “{query}”.</p>
-      <p className="mt-2 text-muted">Check the spelling, or search by first name, last name or email.</p>
+      <p className="mt-2 text-muted">Check the spelling, or try part of a name.</p>
       <button
         type="button"
         onClick={() => setQuery('')}
