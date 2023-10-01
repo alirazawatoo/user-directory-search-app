@@ -1,5 +1,3 @@
-import PropTypes from 'prop-types'
-
 export default function NoResults({ searchTerm }) {
   return (
     <div className="text-center py-8">
@@ -12,7 +10,3 @@ export default function NoResults({ searchTerm }) {
     </div>
   )
 }
-
-NoResults.propTypes = {
-  searchTerm: PropTypes.string.isRequired
-} 

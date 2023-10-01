@@ -1,5 +1,3 @@
-import PropTypes from 'prop-types'
-
 export default function UserInfo({ firstName, lastName, email, phone }) {
   return (
     <div>
@@ -11,10 +9,3 @@ export default function UserInfo({ firstName, lastName, email, phone }) {
     </div>
   )
 }
-
-UserInfo.propTypes = {
-  firstName: PropTypes.string.isRequired,
-  lastName: PropTypes.string.isRequired,
-  email: PropTypes.string.isRequired,
-  phone: PropTypes.string.isRequired
-} 

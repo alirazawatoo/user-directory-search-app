@@ -1,6 +1,4 @@
 import { Link } from 'react-router-dom'
-import PropTypes from 'prop-types'
-
 export default function UserCard({ user }) {
   return (
     <Link
@@ -16,16 +14,3 @@ export default function UserCard({ user }) {
     </Link>
   )
 }
-
-UserCard.propTypes = {
-  user: PropTypes.shape({
-    id: PropTypes.number.isRequired,
-    firstName: PropTypes.string.isRequired,
-    lastName: PropTypes.string.isRequired,
-    email: PropTypes.string.isRequired,
-    phone: PropTypes.string.isRequired,
-    company: PropTypes.shape({
-      name: PropTypes.string.isRequired
-    }).isRequired
-  }).isRequired
-} 

@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types'
 import UserCard from './UserCard'
 
 export default function UserGrid({ users, lastUserElementRef }) {
@@ -15,12 +14,3 @@ export default function UserGrid({ users, lastUserElementRef }) {
     </div>
   )
 }
-
-UserGrid.propTypes = {
-  users: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.number.isRequired,
-    })
-  ).isRequired,
-  lastUserElementRef: PropTypes.func.isRequired
-} 

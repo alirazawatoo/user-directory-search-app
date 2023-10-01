@@ -1,5 +1,3 @@
-import PropTypes from 'prop-types'
-
 export default function ErrorMessage({ message }) {
   return (
     <div
@@ -11,7 +9,3 @@ export default function ErrorMessage({ message }) {
     </div>
   )
 }
-
-ErrorMessage.propTypes = {
-  message: PropTypes.string.isRequired
-} 
