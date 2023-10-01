@@ -2,11 +2,12 @@ import { Link } from 'react-router-dom'
 
 export default function Navbar() {
   return (
-    <header className="bg-white shadow">
-      <div className="container mx-auto px-4 py-4">
-        <Link to="/" className="text-xl font-bold text-gray-800 hover:text-blue-700">
-          User Directory
+    <header className="border-b-4 border-forest bg-card">
+      <div className="mx-auto flex max-w-6xl items-baseline justify-between gap-4 px-4 py-4 sm:px-6">
+        <Link to="/" className="font-display text-2xl font-bold tracking-tight text-forest-deep">
+          UserFinder
         </Link>
+        <p className="hidden text-sm uppercase tracking-[0.18em] text-muted sm:block">People directory</p>
       </div>
     </header>
   )

@@ -1,15 +1,15 @@
-export default function UserInfo({ user, headingRef }) {
+const termClass = 'text-xs font-bold uppercase tracking-[0.14em] text-muted'
+
+export default function UserInfo({ user }) {
   return (
-    <div>
-      <h1 id="profile-heading" ref={headingRef} tabIndex={-1} className="text-2xl font-bold focus:outline-none">
-        {user.firstName} {user.lastName}
-      </h1>
-      <dl className="mt-4 space-y-2">
+    <section aria-labelledby="contact-heading">
+      <h2 id="contact-heading" className="font-display text-xl font-bold">Contact</h2>
+      <dl className="mt-4 space-y-3">
         <div>
-          <dt className="text-sm font-semibold text-gray-600">Email</dt>
-          <dd>
+          <dt className={termClass}>Email</dt>
+          <dd className="font-mono">
             {user.email ? (
-              <a href={`mailto:${user.email}`} className="break-all text-blue-700 underline">
+              <a href={`mailto:${user.email}`} className="break-all text-forest underline underline-offset-4">
                 {user.email}
               </a>
             ) : (
@@ -18,10 +18,10 @@ export default function UserInfo({ user, headingRef }) {
           </dd>
         </div>
         <div>
-          <dt className="text-sm font-semibold text-gray-600">Phone</dt>
-          <dd>{user.phone || 'Not listed'}</dd>
+          <dt className={termClass}>Phone</dt>
+          <dd className="font-mono">{user.phone || 'Not listed'}</dd>
         </div>
       </dl>
-    </div>
+    </section>
   )
 }

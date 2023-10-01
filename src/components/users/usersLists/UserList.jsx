@@ -4,7 +4,7 @@ import { useUsers } from '../../../hooks/useUsers'
 import { directorySearch } from '../../../hooks/useUserSearchParams'
 import { PAGE_SIZE } from '../../../services/UserService'
 import ErrorMessage from '../../common/ErrorMessage'
-import Spinner from '../../common/Spinner'
+import LoadingPlaceholder from '../../common/LoadingPlaceholder'
 import NoResults from './NoResults'
 import Pagination from './Pagination'
 import SearchBar from './SearchBar'
@@ -39,28 +39,28 @@ export default function UserList() {
   const pastLastPage = isEmpty && total > 0
 
   return (
-    <section aria-labelledby="results-heading" className="space-y-6">
+    <section aria-labelledby="results-heading" className="space-y-8">
       <SearchBar />
 
-      <div className="flex flex-wrap items-baseline justify-between gap-2">
-        <h1 id="results-heading" ref={headingRef} tabIndex={-1} className="text-2xl font-bold focus:outline-none">
+      <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 border-b border-rule pb-3">
+        <h1 id="results-heading" ref={headingRef} tabIndex={-1} className="font-display text-4xl font-bold focus:outline-none">
           People
         </h1>
-        <p role="status" className="text-sm text-gray-700">
+        <p role="status" className="font-mono text-sm text-muted">
           {resultSummary({ status, total, page, query, count: users.length })}
         </p>
       </div>
 
       {status === 'failed' && <ErrorMessage message={error.message} onRetry={retry} />}
 
-      {status === 'loading' && users.length === 0 && <Spinner label="Loading people" />}
+      {status === 'loading' && users.length === 0 && <LoadingPlaceholder label="Loading people" cards={6} />}
 
       {pastLastPage && (
-        <div className="py-8 text-center">
-          <p className="text-lg text-gray-700">Page {page} is past the end of these results.</p>
+        <div className="rounded-lg border border-dashed border-rule p-10 text-center">
+          <p className="font-display text-2xl font-bold">Page {page} is past the end of these results.</p>
           <Link
             to={{ pathname: '/', search: directorySearch({ query, page: totalPages }) }}
-            className="mt-2 inline-block font-semibold text-blue-700 underline"
+            className="mt-3 inline-block font-bold text-forest underline underline-offset-4"
           >
             Go to the last page ({totalPages})
           </Link>

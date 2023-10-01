@@ -25,13 +25,13 @@ export default function SearchBar() {
   return (
     <form
       role="search"
-      className="flex flex-col gap-1"
+      className="flex flex-col gap-2"
       onSubmit={(event) => {
         event.preventDefault()
         commitNow(draft)
       }}
     >
-      <label htmlFor="directory-search" className="text-sm font-semibold text-gray-800">
+      <label htmlFor="directory-search" className="text-sm font-bold uppercase tracking-[0.14em] text-forest-deep">
         Search by name or email
       </label>
       <input
@@ -41,7 +41,7 @@ export default function SearchBar() {
         spellCheck={false}
         value={draft}
         aria-describedby="directory-search-hint"
-        className="w-full rounded-lg border border-gray-400 px-4 py-2 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600"
+        className="w-full rounded-md border-2 border-ink/70 bg-card px-4 py-3 text-lg placeholder:text-muted focus:border-forest"
         onChange={(event) => {
           setDraft(event.target.value)
           debouncedSetQuery.run(event.target.value)
@@ -54,7 +54,7 @@ export default function SearchBar() {
           }
         }}
       />
-      <p id="directory-search-hint" className="text-sm text-gray-600">
+      <p id="directory-search-hint" className="text-sm text-muted">
         Results update as you type. Press Escape to clear.
       </p>
     </form>
