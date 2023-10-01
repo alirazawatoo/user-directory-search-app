@@ -8,7 +8,9 @@
   },
   "scripts": {
     "dev": "vite",
+    "dev:mock": "vite --mode mock",
     "build": "vite build",
+    "build:mock": "vite build --mode mock",
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest run",
@@ -41,5 +43,10 @@
     "tailwindcss": "^4.3.5",
     "vite": "^8.3.7",
     "vitest": "^5.1.0"
+  },
+  "msw": {
+    "workerDirectory": [
+      "public"
+    ]
   }
 }
