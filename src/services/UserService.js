@@ -1,76 +1,61 @@
 import { urlsService } from './UrlsService'
 
-const mapHttpStatusToMessage = (status, notFoundMessage, genericMessage) => {
+export const PAGE_SIZE = 12
+
+const NETWORK_MESSAGE = 'Could not reach the directory. Check your connection and try again.'
+const SERVER_MESSAGE = 'Temporary server issue. Please try again later.'
+
+const httpError = (status, notFoundMessage, fallbackMessage) => {
   if (status === 404) {
-    return notFoundMessage
+    return Object.assign(new Error(notFoundMessage), { code: 'not_found' })
   }
-  if (status >= 500) {
-    return 'Temporary server issue. Please try again later.'
-  }
-  return genericMessage
+  return new Error(status >= 500 ? SERVER_MESSAGE : fallbackMessage)
 }
 
-const normalizeUnknownError = (error, fallbackMessage) => {
-  if (error instanceof Error && error.message) {
-    return error.message
+async function getJson(url, { signal, notFoundMessage, fallbackMessage }) {
+  let response
+  try {
+    response = await fetch(url, { signal })
+  } catch (error) {
+    // An abort is the caller's decision, not a failure to report.
+    if (error?.name === 'AbortError') throw error
+    throw new Error(NETWORK_MESSAGE)
   }
-  return fallbackMessage
+
+  if (!response.ok) {
+    throw httpError(response.status, notFoundMessage, fallbackMessage)
+  }
+  return response.json()
 }
 
 export const userService = {
-  async getUsers(page = 1, limit = 12) {
-    try {
-      const skip = (page - 1) * limit
-      const response = await fetch(
-        `${urlsService.users}?limit=${limit}&skip=${skip}`
-      )
+  async getUsers({ query = '', page = 1, limit = PAGE_SIZE, signal } = {}) {
+    const term = query.trim()
+    const params = new URLSearchParams({
+      limit: String(limit),
+      skip: String((page - 1) * limit),
+    })
+    if (term) params.set('q', term)
 
-      if (response.ok) {
-        const data = await response.json()
-        return {
-          users: data.users ?? [],
-          page,
-          total: data.total ?? 0,
-        }
-      }
+    const data = await getJson(`${term ? urlsService.search : urlsService.users}?${params}`, {
+      signal,
+      notFoundMessage: 'Users data not found',
+      fallbackMessage: 'Failed to fetch users. Please try again later.',
+    })
 
-      const message = mapHttpStatusToMessage(
-        response.status,
-        'Users data not found',
-        'Failed to fetch users. Please try again later.'
-      )
-      throw new Error(message)
-    } catch (error) {
-      console.error('Error fetching users:', error)
-      const message = normalizeUnknownError(
-        error,
-        'Failed to fetch users. Please try again later.'
-      )
-      throw new Error(message)
+    return {
+      users: data.users ?? [],
+      total: data.total ?? 0,
+      query: term,
+      page,
     }
   },
 
-  async getSingleUser(id) {
-    try {
-      const response = await fetch(urlsService.user(id))
-
-      if (response.ok) {
-        return await response.json()
-      }
-
-      const message = mapHttpStatusToMessage(
-        response.status,
-        'User not found',
-        'Failed to fetch user details. Please try again later.'
-      )
-      throw new Error(message)
-    } catch (error) {
-      console.error('Error fetching user:', error)
-      const message = normalizeUnknownError(
-        error,
-        'Failed to fetch user details. Please try again later.'
-      )
-      throw new Error(message)
-    }
+  getSingleUser(id, { signal } = {}) {
+    return getJson(urlsService.user(id), {
+      signal,
+      notFoundMessage: 'User not found',
+      fallbackMessage: 'Failed to fetch user details. Please try again later.',
+    })
   },
 }

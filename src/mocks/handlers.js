@@ -21,7 +21,7 @@ const matches = (user, term) =>
   )
 
 export const handlers = [
-  http.get(`${urlsService.users}/search`, ({ request }) => {
+  http.get(urlsService.search, ({ request }) => {
     const url = new URL(request.url)
     const term = (url.searchParams.get('q') ?? '').trim().toLowerCase()
     return HttpResponse.json(pageOf(mockUsers.filter((user) => matches(user, term)), url))

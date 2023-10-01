@@ -1,50 +1,34 @@
-import { useEffect, useCallback, useRef } from 'react'
+import { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchUsers } from '../store/UserSlice'
-import { filterUsersByName } from '../utils/UserFilters'
+import { PAGE_SIZE } from '../services/UserService'
+import { useUserSearchParams } from './useUserSearchParams'
 
-export const useUsers = () => {
+export function useUsers() {
   const dispatch = useDispatch()
-  const { 
-    users, 
-    hasMore, 
-    status, 
-    error, 
-    searchTerm,
-    page 
-  } = useSelector((state) => state.users)
-
-  const observer = useRef()
-  const initialFetchDone = useRef(false)
-
-  const lastUserElementRef = useCallback(node => {
-    if (status === 'loading') return
-    if (observer.current) observer.current.disconnect()
-    
-    observer.current = new IntersectionObserver(entries => {
-      if (entries[0].isIntersecting && hasMore) {
-        dispatch(fetchUsers(page + 1))
-      }
-    })
-    
-    if (node) observer.current.observe(node)
-  }, [status, hasMore, page, dispatch])
+  const { query, page } = useUserSearchParams()
+  const list = useSelector((state) => state.users.list)
 
   useEffect(() => {
-    if (!initialFetchDone.current && users.length === 0 && status === 'idle') {
-      initialFetchDone.current = true
-      dispatch(fetchUsers(1))
-    }
-  }, [dispatch, users.length, status])
+    const request = dispatch(fetchUsers({ query, page }))
+    // Leaving this query/page aborts its request, so a slow response for an
+    // old search cannot land after the new one.
+    return () => request.abort()
+  }, [dispatch, query, page])
 
-  const filteredUsers = filterUsersByName(users, searchTerm)
+  const retry = useCallback(
+    () => dispatch(fetchUsers({ query, page, force: true })),
+    [dispatch, query, page]
+  )
 
   return {
-    filteredUsers,
-    status,
-    error,
-    searchTerm,
-    hasMore,
-    lastUserElementRef
+    users: list.items,
+    total: list.total,
+    status: list.status,
+    error: list.error,
+    query,
+    page,
+    totalPages: Math.max(1, Math.ceil(list.total / PAGE_SIZE)),
+    retry,
   }
-} 
+}

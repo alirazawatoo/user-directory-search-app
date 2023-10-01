@@ -1,26 +1,34 @@
-import { useEffect } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { useCallback, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { fetchSingleUser } from '../store/UserSlice'
 
-export const useUserDetails = (id) => {
+const parseUserId = (raw) => (/^[1-9]\d*$/.test(raw ?? '') ? Number(raw) : null)
+
+const INVALID_ID = { message: 'User not found', code: 'not_found' }
+
+export function useUserDetails(rawId) {
   const dispatch = useDispatch()
-  const { selectedUser, status, error } = useSelector((state) => state.users)
+  const id = parseUserId(rawId)
+  const detail = useSelector((state) => state.users.detail)
 
   useEffect(() => {
-    const numericId = Number.parseInt(id, 10)
+    if (id === null) return undefined
+    const request = dispatch(fetchSingleUser({ id }))
+    return () => request.abort()
+  }, [dispatch, id])
 
-    if (Number.isNaN(numericId)) {
-      return
-    }
+  const retry = useCallback(() => {
+    if (id !== null) dispatch(fetchSingleUser({ id, force: true }))
+  }, [dispatch, id])
 
-    if (!selectedUser || selectedUser.id !== numericId) {
-      dispatch(fetchSingleUser(numericId))
-    }
-  }, [id, selectedUser, dispatch])
-
-  return {
-    user: selectedUser,
-    status,
-    error
+  if (id === null) {
+    return { user: null, status: 'failed', error: INVALID_ID, retry }
   }
-} 
+
+  // Until the effect has dispatched for this id, the slot still describes
+  // the previously viewed user.
+  if (detail.id !== id) {
+    return { user: null, status: 'loading', error: null, retry }
+  }
+  return { user: detail.user, status: detail.status, error: detail.error, retry }
+}

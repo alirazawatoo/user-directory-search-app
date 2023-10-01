@@ -36,4 +36,8 @@ export default [
       ],
     },
   },
+  {
+    files: ['src/test/**', '**/__tests__/**'],
+    rules: { 'react-refresh/only-export-components': 'off' },
+  },
 ]

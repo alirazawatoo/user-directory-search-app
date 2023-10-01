@@ -1,16 +1,17 @@
 import UserCard from './UserCard'
 
-export default function UserGrid({ users, lastUserElementRef }) {
+export default function UserGrid({ users, busy }) {
   return (
-    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-      {users.map((user, index) => (
-        <div
-          key={`${user.id}-${index}`}
-          ref={index === users.length - 1 ? lastUserElementRef : null}
-        >
+    <ul
+      aria-label="People"
+      aria-busy={busy}
+      className={`grid gap-4 sm:grid-cols-2 lg:grid-cols-3 ${busy ? 'opacity-60' : ''}`}
+    >
+      {users.map((user) => (
+        <li key={user.id}>
           <UserCard user={user} />
-        </div>
+        </li>
       ))}
-    </div>
+    </ul>
   )
 }
