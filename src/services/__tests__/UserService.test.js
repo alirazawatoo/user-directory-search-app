@@ -2,15 +2,15 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { userService } from '../UserService'
 import { urlsService } from '../UrlsService'
 
-const originalFetch = global.fetch
+const originalFetch = globalThis.fetch
 
 describe('userService', () => {
   beforeEach(() => {
-    global.fetch = vi.fn()
+    globalThis.fetch = vi.fn()
   })
 
   afterEach(() => {
-    global.fetch = originalFetch
+    globalThis.fetch = originalFetch
     vi.resetAllMocks()
   })
 
@@ -18,7 +18,7 @@ describe('userService', () => {
     it('fetches users with correct query params and maps response', async () => {
       const mockUsers = [{ id: 1, firstName: 'John', lastName: 'Doe' }]
 
-      global.fetch.mockResolvedValueOnce({
+      globalThis.fetch.mockResolvedValueOnce({
         ok: true,
         status: 200,
         json: async () => ({ users: mockUsers, total: 100 }),
@@ -26,7 +26,7 @@ describe('userService', () => {
 
       const result = await userService.getUsers(2, 12)
 
-      expect(global.fetch).toHaveBeenCalledWith(
+      expect(globalThis.fetch).toHaveBeenCalledWith(
         `${urlsService.users}?limit=12&skip=12`
       )
 
@@ -38,7 +38,7 @@ describe('userService', () => {
     })
 
     it('throws a not found error message on 404', async () => {
-      global.fetch.mockResolvedValueOnce({
+      globalThis.fetch.mockResolvedValueOnce({
         ok: false,
         status: 404,
         json: async () => ({}),
@@ -50,7 +50,7 @@ describe('userService', () => {
     })
 
     it('throws a server-specific message on 500', async () => {
-      global.fetch.mockResolvedValueOnce({
+      globalThis.fetch.mockResolvedValueOnce({
         ok: false,
         status: 500,
         json: async () => ({}),
@@ -62,7 +62,7 @@ describe('userService', () => {
     })
 
     it('propagates the underlying network error message', async () => {
-      global.fetch.mockRejectedValueOnce(new Error('Network error'))
+      globalThis.fetch.mockRejectedValueOnce(new Error('Network error'))
 
       await expect(userService.getUsers(1, 12)).rejects.toThrow('Network error')
     })
@@ -72,7 +72,7 @@ describe('userService', () => {
     it('returns single user on success', async () => {
       const mockUser = { id: 1, firstName: 'John', lastName: 'Doe' }
 
-      global.fetch.mockResolvedValueOnce({
+      globalThis.fetch.mockResolvedValueOnce({
         ok: true,
         status: 200,
         json: async () => mockUser,
@@ -80,12 +80,12 @@ describe('userService', () => {
 
       const result = await userService.getSingleUser(1)
 
-      expect(global.fetch).toHaveBeenCalledWith(urlsService.user(1))
+      expect(globalThis.fetch).toHaveBeenCalledWith(urlsService.user(1))
       expect(result).toEqual(mockUser)
     })
 
     it('throws a not found error message on 404', async () => {
-      global.fetch.mockResolvedValueOnce({
+      globalThis.fetch.mockResolvedValueOnce({
         ok: false,
         status: 404,
         json: async () => ({}),
@@ -97,7 +97,7 @@ describe('userService', () => {
     })
 
     it('propagates the underlying network error message', async () => {
-      global.fetch.mockRejectedValueOnce(new Error('Network error'))
+      globalThis.fetch.mockRejectedValueOnce(new Error('Network error'))
 
       await expect(userService.getSingleUser(1)).rejects.toThrow('Network error')
     })
