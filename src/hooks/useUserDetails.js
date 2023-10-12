@@ -7,8 +7,14 @@ export const useUserDetails = (id) => {
   const { selectedUser, status, error } = useSelector((state) => state.users)
 
   useEffect(() => {
-    if (!selectedUser || selectedUser.id !== parseInt(id)) {
-      dispatch(fetchSingleUser(id))
+    const numericId = Number.parseInt(id, 10)
+
+    if (Number.isNaN(numericId)) {
+      return
+    }
+
+    if (!selectedUser || selectedUser.id !== numericId) {
+      dispatch(fetchSingleUser(numericId))
     }
   }, [id, selectedUser, dispatch])
 
