@@ -1,5 +1,9 @@
 export const filterUsersByName = (users, searchTerm) => {
-  if (!Array.isArray(users) || users.length === 0) {
+  if (!Array.isArray(users)) {
+    return []
+  }
+
+  if (users.length === 0) {
     return []
   }
 
@@ -10,9 +14,10 @@ export const filterUsersByName = (users, searchTerm) => {
   }
 
   return users.filter((user) => {
-    const fullName = `${user.firstName ?? ''} ${user.lastName ?? ''}`
-      .trim()
-      .toLowerCase()
+    const firstName = user.firstName ?? ''
+    const lastName = user.lastName ?? ''
+
+    const fullName = `${firstName} ${lastName}`.trim().toLowerCase()
 
     if (!fullName) {
       return false
