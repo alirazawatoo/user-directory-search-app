@@ -1,8 +1,19 @@
-# React + Vite
+# User Directory Search
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A React/Vite directory that loads users from an API, supports list/grid presentation and filtering, and presents detailed personal and company information.
 
-Currently, two official plugins are available:
+```text
+UserService -> Redux user state -> search/filter utilities -> list, grid, and detail views
+```
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Local setup
+
+```bash
+npm install
+npm run dev
+npm test
+```
+
+`UserService` isolates remote access, `UserFilters` contains deterministic filtering, and custom hooks coordinate list/detail loading. Vitest coverage exists for services and filters.
+
+The public API contract, pagination, stale-request handling, caching, and accessibility need integration verification. Error messages are user-facing but do not establish retry/offline behavior.
